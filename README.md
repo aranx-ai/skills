@@ -9,7 +9,7 @@ All skills:
 npx skills add aranx-ai/skills
 ```
 
-Just the frontend-design skill:
+Just the pixel-craft skill:
 ```
-npx skills add aranx-ai/skills --skill frontend-design
+npx skills add aranx-ai/skills --skill pixel-craft
 ```
