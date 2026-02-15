@@ -117,26 +117,46 @@ Not every link needs color. In nav/list-heavy interfaces, use weight or hover-on
 ## 4. Color
 
 ### Use HSL (or oklch)
-HSL makes color relationships intuitive. Tailwind 4 uses oklch for wider gamut.
+HSL makes color relationships intuitive — hue (0-360°), saturation (0-100%), lightness (0-100%). Tailwind 4 uses oklch for wider gamut. Don't confuse HSL with HSB (design tools use HSB where 100% brightness ≠ white).
 
-### Build a Complete Palette
-- **Greys**: 8-10 shades (text, backgrounds, borders)
-- **Primary**: 5-10 shades (brand, CTAs, active states)
-- **Accents**: 5-10 shades each (red=errors, yellow=warnings, green=success)
+### Build a Complete Palette (You Need More Colors Than You Think)
+You can't build anything real with 5 hex codes. You need three categories:
+- **Greys**: 8-10 shades (text, backgrounds, panels, borders, form controls)
+- **Primary**: 5-10 shades (brand, CTAs, active nav — the color that defines your site's "look")
+- **Accents**: 5-10 shades each for semantic and feature colors:
+  - **Red** — errors, destructive actions, negative trends
+  - **Yellow** — warnings, caution states
+  - **Green** — success, positive trends
+  - **Teal/Pink/etc.** — highlight new features, categorize items
+- **Total**: Up to **10 different colors with 5-10 shades each** for complex UIs
 
 ### Define 9 Shades per Color (100-900)
-1. Pick base (500) — works as button background
-2. Pick edges — 900 for text, 50/100 for tinted backgrounds
-3. Fill gaps: 700, 300, then 800, 600, 400, 200
+Don't use CSS `lighten()`/`darken()` — you'll get 35 nearly identical shades. Define a fixed set:
+1. **Pick base (500)** — should work as a button background
+2. **Pick edges** — 900 for darkest text, 100 for tinted backgrounds (test with an alert component)
+3. **Fill gaps**: 700 and 300 first (midpoints), then 800, 600, 400, 200
+
+### Perceived Brightness and Hue Rotation
+Not all hues are equally bright. At the same HSL lightness, yellow appears much lighter than blue. Perceived brightness has three local maximums (yellow 60°, cyan 180°, magenta 300°) and three minimums (red 0°, green 120°, blue 240°).
+
+**Use this to create richer shade palettes:**
+- **To lighten**: rotate hue toward nearest bright hue (60°, 180°, 300°)
+- **To darken**: rotate hue toward nearest dark hue (0°, 120°, 240°)
+- **Example**: For a yellow palette, rotate toward orange as you darken — shades feel warm and rich instead of dull brown
+- **Combine approaches**: adjust both hue and lightness for natural-feeling shade scales
+- **Keep rotations under 20-30°** or it looks like a different color entirely
 
 ### Saturation Rules
-- Increase saturation as lightness moves away from 50%
-- Rotate hue toward brighter colors (yellow/cyan/magenta) for lighter shades
-- Rotate hue toward darker colors (red/green/blue) for darker shades
-- Keep rotations under 20-30 degrees
+- **Increase saturation as lightness moves away from 50%** — without this, edge shades look washed out
+- The same saturation value at 50% lightness looks more colorful than at 90% lightness
+- If your base color is already at 100% saturation, use hue rotation instead to adjust brightness
 
 ### Saturate Your Greys
-Pure grey feels lifeless. Use Tailwind's `slate` (cool), `gray`/`zinc` (neutral), or `stone` (warm).
+Pure grey (0% saturation) feels lifeless. Real-world "greys" are saturated:
+- **Cool greys**: Saturate with blue (H~207-210, S~12-21%) → Tailwind's `slate`
+- **Neutral greys**: Minimal saturation → Tailwind's `gray`, `zinc`
+- **Warm greys**: Saturate with yellow/orange (H~39-41, S~12-21%) → Tailwind's `stone`
+- **Increase saturation for edge shades** to maintain consistent color temperature across the scale
 
 ### On Colored Backgrounds
 Don't use grey text — hand-pick a color with the same hue but adjusted saturation/lightness:
@@ -146,10 +166,12 @@ Don't use grey text — hand-pick a color with the same hue but adjusted saturat
 ```
 
 ### Accessibility
-- Normal text: **4.5:1** contrast minimum
-- Large text (18px+): **3:1** minimum
-- Flip contrast when colored backgrounds are tricky: dark text on light background (`bg-blue-100 text-blue-800`)
-- Never rely on color alone — add icons, labels, or contrast differences
+- **Normal text** (under ~18px): **4.5:1** contrast minimum (hsl(0,0%,42%) ≈ 5.41:1 AA; hsl(0,0%,33%) ≈ 7.57:1 AAA)
+- **Large text** (18px+ or 14px+ bold): **3:1** minimum
+- **Flip the contrast** when colored backgrounds are too dark and dominate hierarchy: use dark text on light background (`bg-green-100 text-green-800`) instead of white text on dark background
+- **Rotate hue for colored-on-colored**: When picking secondary text color on a dark colored panel, rotate hue toward a brighter color (cyan, magenta, yellow) to gain contrast without approaching pure white
+- **Never rely on color alone** — add icons (arrows for trends), labels, or contrast differences for colorblind users
+- Use **contrast** (light vs dark shades of one color) instead of multiple distinct colors in graphs/charts
 
 ---
 
